@@ -1,0 +1,20 @@
+[application]
+asset_dir = "public"
+name = "stayhydated"
+out_dir = "dist"
+
+[web.app]
+title = "stayhydated"
+
+[web.watcher]
+index_on_404 = true
+reload_html = true
+watch_path = [ "src", "public", "assets" ]
+
+[web.resource]
+script = [  ]
+style = [  ]
+
+[web.resource.dev]
+script = [  ]
+style = [  ]

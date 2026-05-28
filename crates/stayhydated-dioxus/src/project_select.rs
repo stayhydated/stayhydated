@@ -30,6 +30,13 @@ impl Eq for ProjectOption {}
 pub fn stayhydated_project_options() -> Vec<ProjectOption> {
     vec![
         ProjectOption::builder()
+            .id("stayhydated")
+            .mark("SH")
+            .name("stayhydated")
+            .description("Project index")
+            .href("/")
+            .build(),
+        ProjectOption::builder()
             .id("koruma")
             .mark("K")
             .name("koruma")

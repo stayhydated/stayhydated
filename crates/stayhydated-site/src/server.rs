@@ -20,9 +20,13 @@ pub fn serve_dioxus_site(
         let app_router = Router::new().serve_dioxus_application(cfg.clone(), app);
         let app_router = with_base_path(app_router, cfg, app);
 
-        Ok(static_routes_router()
-            .with_state(FullstackState::headless())
-            .merge(app_router))
+        if dioxus::cli_config::base_path().is_some() {
+            Ok(static_routes_router()
+                .with_state(FullstackState::headless())
+                .merge(app_router))
+        } else {
+            Ok(app_router)
+        }
     })
 }
 

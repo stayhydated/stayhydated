@@ -18,5 +18,8 @@ check:
 test:
     cargo test --workspace --all-features --all-targets
 
+web:
+    dx serve --platform web --package web
+
 cov:
     cargo llvm-cov --workspace --all-features --all-targets

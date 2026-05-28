@@ -1,3 +1,5 @@
 target/
 node_modules/
 .rumdl_cache/
+web/.dx-bundle/
+web/dist/

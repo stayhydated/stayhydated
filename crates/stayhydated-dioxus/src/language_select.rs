@@ -11,7 +11,7 @@ pub fn LanguageSelect<T: Clone + PartialEq + 'static>(
 ) -> Element {
     let initial_selected = selected.clone();
     let mut selected_value = use_signal(move || Some(initial_selected));
-    let selected_for_effect = selected.clone();
+    let selected_for_effect = selected;
 
     use_effect(move || {
         let next_selected = Some(selected_for_effect.clone());

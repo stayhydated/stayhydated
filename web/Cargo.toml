@@ -1,0 +1,34 @@
+[package]
+name = "web"
+version.workspace = true
+rust-version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[features]
+default = [  ]
+server = [ "dioxus/server", "dep:dioxus-server", "stayhydated-site/server" ]
+web = [ "dioxus/web" ]
+
+[dependencies]
+dioxus = { features = [ "router", "launch", "lib", "fullstack" ], workspace = true }
+dioxus-free-icons = { workspace = true }
+dioxus-server = { optional = true, workspace = true }
+es-fluent = { workspace = true }
+es-fluent-lang = { workspace = true }
+es-fluent-manager-dioxus = { workspace = true }
+stayhydated-dioxus = { path = "../crates/stayhydated-dioxus" }
+stayhydated-site = { path = "../crates/stayhydated-site" }
+strum = { features = [ "derive" ], workspace = true }
+
+[build-dependencies]
+es-fluent-build = { workspace = true }
+
+[dev-dependencies]
+anyhow = { workspace = true }
+serial_test = "3.4"
+tempfile = { workspace = true }
+
+[lints]
+workspace = true

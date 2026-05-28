@@ -1,0 +1,12 @@
+home_message-EsFluentTitle = es-fluent
+home_message-KorumaTitle = koruma
+home_message-LocalizationSectionTitle = 本地化
+home_message-ProjectSiteAction = 站点
+home_message-ProjectSourceAction = 源码
+home_message-ValidationSectionTitle = 校验
+page_metadata_message-HomeDescription = stayhydated Rust 项目索引，包括 koruma 和 es-fluent。
+page_metadata_message-HomeTitle = stayhydated
+site_chrome_message-BrandKicker = 项目索引
+site_chrome_message-LocaleLabel = 语言
+site_chrome_message-NavGithub = GitHub 组织
+site_chrome_message-SiteName = stayhydated

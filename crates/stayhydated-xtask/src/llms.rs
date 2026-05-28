@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::Path;
 
-use anyhow::Context;
+use anyhow::Context as _;
 use bon::Builder;
 use mdbook_driver::MDBook;
 use mdbook_driver::book::BookItem;

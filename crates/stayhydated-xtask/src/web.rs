@@ -2,7 +2,7 @@ use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
 
-use anyhow::{Context, bail};
+use anyhow::{Context as _, bail};
 use bon::Builder;
 use walkdir::WalkDir;
 

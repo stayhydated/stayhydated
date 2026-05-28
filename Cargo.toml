@@ -1,5 +1,11 @@
 [workspace]
-members = [ "crates/stayhydated-dioxus", "crates/stayhydated-site", "crates/stayhydated-xtask" ]
+members = [
+  "crates/stayhydated-dioxus",
+  "crates/stayhydated-site",
+  "crates/stayhydated-xtask",
+  "web",
+  "xtask",
+]
 resolver = "3"
 
 [workspace.package]
@@ -15,14 +21,24 @@ version = "0.1.0"
 anyhow = "1.0"
 bon = "3.9.1"
 cargo_metadata = "0.23"
+clap = { features = [ "derive" ], version = "4.5" }
 dioxus = { default-features = false, features = [ "lib", "router" ], version = "0.7" }
 dioxus-free-icons = { default-features = false, features = [ "lucide" ], version = "0.10.0" }
 dioxus-primitives = { default-features = false, features = [
   "router",
 ], git = "https://github.com/DioxusLabs/components", version = "0.0.1" }
 dioxus-server = { default-features = false, features = [ "document", "router" ], version = "0.7.9" }
+es-fluent = { features = [ "derive" ], path = "../es-fluent/crates/es-fluent", version = "0.16.0" }
+es-fluent-build = { path = "../es-fluent/crates/es-fluent-build", version = "0.16.0" }
+es-fluent-lang = { path = "../es-fluent/crates/es-fluent-lang", version = "0.16.0" }
+es-fluent-manager-dioxus = { default-features = false, features = [
+  "client",
+  "debug-embed",
+  "ssr",
+], path = "../es-fluent/crates/es-fluent-manager-dioxus", version = "0.7.0" }
 mdbook-driver = "0.5"
 path-slash = "0.2"
+strum = "0.28"
 tempfile = "3"
 walkdir = "2.5"
 

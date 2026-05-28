@@ -1,13 +1,13 @@
 use std::{
     collections::{HashMap, HashSet},
-    io::{self, Write},
+    io::{self, Write as _},
     path::Path,
     process::{Command, Output},
     thread,
     time::Duration,
 };
 
-use anyhow::{Context, bail};
+use anyhow::{Context as _, bail};
 use bon::Builder;
 use cargo_metadata::{DependencyKind, MetadataCommand, Package, PackageId};
 
