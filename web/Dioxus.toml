@@ -4,6 +4,7 @@ name = "stayhydated"
 out_dir = "dist"
 
 [web.app]
+base_path = "stayhydated"
 title = "stayhydated"
 
 [web.watcher]

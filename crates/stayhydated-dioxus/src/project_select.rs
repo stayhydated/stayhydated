@@ -13,6 +13,15 @@ pub struct ProjectOption {
     pub href: String,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+struct ProjectOptionContent {
+    id: String,
+    mark: String,
+    name: String,
+    description: String,
+    href: String,
+}
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum StayhydatedProject {
     Stayhydated,
@@ -87,6 +96,24 @@ impl From<StayhydatedProject> for ProjectOption {
 }
 
 impl ProjectOption {
+    fn content(&self) -> ProjectOptionContent {
+        ProjectOptionContent {
+            id: self.id.clone(),
+            mark: self.mark.clone(),
+            name: self.name.clone(),
+            description: self.description.clone(),
+            href: self.href.clone(),
+        }
+    }
+
+    fn has_same_content(&self, other: &Self) -> bool {
+        self.id == other.id
+            && self.mark == other.mark
+            && self.name == other.name
+            && self.description == other.description
+            && self.href == other.href
+    }
+
     fn text_value(&self) -> String {
         format!("{} {}", self.name, self.description)
     }
@@ -107,8 +134,23 @@ pub fn stayhydated_project_options() -> Vec<ProjectOption> {
         .collect()
 }
 
-#[component]
-pub fn ProjectLockup(project: ProjectOption, #[props(default)] compact: bool) -> Element {
+#[derive(Clone, Props)]
+pub struct ProjectLockupProps {
+    pub project: ProjectOption,
+    #[props(default)]
+    pub compact: bool,
+}
+
+impl PartialEq for ProjectLockupProps {
+    fn eq(&self, other: &Self) -> bool {
+        self.compact == other.compact && self.project.has_same_content(&other.project)
+    }
+}
+
+#[allow(non_snake_case)]
+pub fn ProjectLockup(props: ProjectLockupProps) -> Element {
+    let project = props.project;
+    let compact = props.compact;
     let class = if compact {
         "project-lockup is-compact"
     } else {
@@ -128,25 +170,57 @@ pub fn ProjectLockup(project: ProjectOption, #[props(default)] compact: bool) ->
     }
 }
 
-#[component]
-pub fn ProjectSelect(
-    selected: ProjectOption,
-    projects: Vec<ProjectOption>,
-    #[props(default = "Project".to_string())] label: String,
-    #[props(default = "Projects".to_string())] list_label: String,
-) -> Element {
+#[derive(Clone, Props)]
+pub struct ProjectSelectProps {
+    pub selected: ProjectOption,
+    pub projects: Vec<ProjectOption>,
+    #[props(default = "Project".to_string())]
+    pub label: String,
+    #[props(default = "Projects".to_string())]
+    pub list_label: String,
+}
+
+impl PartialEq for ProjectSelectProps {
+    fn eq(&self, other: &Self) -> bool {
+        self.label == other.label
+            && self.list_label == other.list_label
+            && self.selected.has_same_content(&other.selected)
+            && project_options_have_same_content(&self.projects, &other.projects)
+    }
+}
+
+#[allow(non_snake_case)]
+pub fn ProjectSelect(props: ProjectSelectProps) -> Element {
+    let selected = props.selected;
+    let projects = props.projects;
+    let label = props.label;
+    let list_label = props.list_label;
     let initial_selected = selected.clone();
     let mut selected_project = use_signal(move || Some(initial_selected));
     let selected_for_effect = selected.clone();
+    let selected_content = selected.content();
 
-    use_effect(move || {
+    use_effect(use_reactive((&selected_content,), move |_| {
         let next_selected = Some(selected_for_effect.clone());
-        if selected_project() != next_selected {
+        let is_current = selected_project()
+            .as_ref()
+            .map(|current| current.has_same_content(&selected_for_effect))
+            .unwrap_or(false);
+
+        if !is_current {
             selected_project.set(next_selected);
         }
-    });
+    }));
 
-    let trigger_project = selected_project().unwrap_or_else(|| selected.clone());
+    let trigger_project = selected_project()
+        .map(|current| {
+            projects
+                .iter()
+                .find(|project| project.id == current.id)
+                .cloned()
+                .unwrap_or(current)
+        })
+        .unwrap_or_else(|| selected.clone());
     let on_value_change = move |next_project: Option<ProjectOption>| {
         let Some(next_project) = next_project else {
             return;
@@ -202,6 +276,14 @@ pub fn ProjectSelect(
             }
         }
     }
+}
+
+fn project_options_have_same_content(left: &[ProjectOption], right: &[ProjectOption]) -> bool {
+    left.len() == right.len()
+        && left
+            .iter()
+            .zip(right)
+            .all(|(left, right)| left.has_same_content(right))
 }
 
 fn navigate_to_project(href: String) {
