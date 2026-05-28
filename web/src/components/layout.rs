@@ -1,9 +1,7 @@
-use crate::site::constants::GITHUB_ORG_URL;
 use crate::site::i18n::{SiteChromeMessage, SiteLanguage};
 use crate::site::routing::{PageKind, app_route};
 use dioxus::prelude::*;
 use dioxus::router::{navigator, try_router};
-use dioxus_free_icons::{Icon, icons::ld_icons::LdGithub};
 use stayhydated_dioxus::{
     LanguageSelect, ProjectOption, ProjectSelect, stayhydated_project_options,
 };
@@ -16,7 +14,6 @@ pub(crate) fn PageHeader(locale: SiteLanguage, current_page: PageKind) -> Elemen
     };
     let brand_kicker = i18n.localize_message(&SiteChromeMessage::BrandKicker);
     let site_name = i18n.localize_message(&SiteChromeMessage::SiteName);
-    let github_label = i18n.localize_message(&SiteChromeMessage::NavGithub);
 
     rsx! {
         header { class: "page-header",
@@ -32,19 +29,6 @@ pub(crate) fn PageHeader(locale: SiteLanguage, current_page: PageKind) -> Elemen
                 label: "Project selector".to_string(),
             }
             div { class: "header-cluster",
-                a {
-                    class: "icon-nav-link",
-                    href: GITHUB_ORG_URL,
-                    target: "_blank",
-                    rel: "noreferrer",
-                    aria_label: github_label.clone(),
-                    title: github_label,
-                    Icon {
-                        width: 20,
-                        height: 20,
-                        icon: LdGithub,
-                    }
-                }
                 LocaleSwitcher { locale, current_page }
             }
         }
