@@ -1,0 +1,21 @@
+[package]
+name = "stayhydated-xtask"
+description = "Shared xtask helpers for public repositories"
+version.workspace = true
+rust-version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+repository.workspace = true
+readme = "README.md"
+
+[dependencies]
+anyhow = { workspace = true }
+bon = { workspace = true }
+cargo_metadata = { workspace = true }
+mdbook-driver = { workspace = true }
+path-slash = { workspace = true }
+walkdir = { workspace = true }
+
+[lints]
+workspace = true

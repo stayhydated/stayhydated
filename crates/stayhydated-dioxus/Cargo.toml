@@ -1,0 +1,19 @@
+[package]
+name = "stayhydated-dioxus"
+description = "Shared Dioxus components for public repository sites"
+version.workspace = true
+rust-version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+repository.workspace = true
+readme = "README.md"
+
+[dependencies]
+bon = { workspace = true }
+dioxus = { workspace = true }
+dioxus-free-icons = { workspace = true }
+dioxus-primitives = { workspace = true }
+
+[lints]
+workspace = true

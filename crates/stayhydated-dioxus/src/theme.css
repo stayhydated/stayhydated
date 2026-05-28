@@ -1,0 +1,100 @@
+:root {
+  --bg: #000000;
+  --bg-elevated: #000000;
+  --bg-panel: #000000;
+  --bg-hover: #05000c;
+  --line: rgba(0, 246, 255, 0.44);
+  --line-strong: rgba(182, 255, 0, 0.72);
+  --text: #f5fbff;
+  --text-muted: #a8c4cf;
+  --text-dim: #6f8790;
+  --cyan: #00f6ff;
+  --magenta: #ff00e6;
+  --lime: #b6ff00;
+  --amber: #ffd400;
+  --violet: #8a5cff;
+  --panel-bg:
+    linear-gradient(
+      145deg,
+      rgba(0, 246, 255, 0.08),
+      rgba(255, 0, 230, 0.055) 42%,
+      rgba(182, 255, 0, 0.04)
+    ),
+    #000;
+  --panel-bg-hover:
+    linear-gradient(
+      145deg,
+      rgba(0, 246, 255, 0.14),
+      rgba(255, 0, 230, 0.08) 42%,
+      rgba(182, 255, 0, 0.07)
+    ),
+    #000;
+  --field-bg: linear-gradient(180deg, rgba(0, 246, 255, 0.065), rgba(0, 0, 0, 0) 72%), #000;
+  --glow-cyan: 0 0 18px rgba(0, 246, 255, 0.36), 0 0 44px rgba(0, 246, 255, 0.16);
+  --glow-lime: 0 0 18px rgba(182, 255, 0, 0.34), 0 0 44px rgba(182, 255, 0, 0.14);
+  --glow-magenta: 0 0 18px rgba(255, 0, 230, 0.34), 0 0 44px rgba(255, 0, 230, 0.14);
+  --glow-amber: 0 0 18px rgba(255, 212, 0, 0.3), 0 0 40px rgba(255, 212, 0, 0.12);
+  --shadow:
+    0 0 0 1px rgba(0, 246, 255, 0.16), 0 0 28px rgba(0, 246, 255, 0.15),
+    0 18px 72px rgba(0, 0, 0, 0.92);
+  --shadow-strong:
+    0 0 0 1px rgba(0, 246, 255, 0.24), 0 0 34px rgba(0, 246, 255, 0.28),
+    0 0 76px rgba(255, 0, 230, 0.14), 0 24px 90px rgba(0, 0, 0, 0.95);
+  --radius: 8px;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  background:
+    linear-gradient(rgba(0, 246, 255, 0.115) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(182, 255, 0, 0.085) 1px, transparent 1px),
+    linear-gradient(
+      180deg,
+      rgba(255, 0, 230, 0.08),
+      rgba(0, 0, 0, 0) 32%,
+      rgba(0, 246, 255, 0.045)
+    ),
+    #000;
+  background-size:
+    32px 32px,
+    32px 32px,
+    auto,
+    auto;
+  color: var(--text);
+}
+
+html {
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+}
+
+::selection {
+  background: rgba(255, 0, 230, 0.48);
+  color: #fff;
+}
+
+a {
+  color: inherit;
+}
+
+code,
+pre {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}

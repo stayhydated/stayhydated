@@ -1,0 +1,58 @@
+[workspace]
+members = [ "crates/stayhydated-dioxus", "crates/stayhydated-site", "crates/stayhydated-xtask" ]
+resolver = "3"
+
+[workspace.package]
+edition = "2024"
+license = "MIT OR Apache-2.0"
+publish = false
+readme = "README.md"
+repository = "https://github.com/stayhydated/shared"
+rust-version = "1.95"
+version = "0.1.0"
+
+[workspace.dependencies]
+anyhow = "1.0"
+bon = "3.9.1"
+cargo_metadata = "0.23"
+dioxus = { default-features = false, features = [ "lib", "router" ], version = "0.7" }
+dioxus-free-icons = { default-features = false, features = [ "lucide" ], version = "0.10.0" }
+dioxus-primitives = { default-features = false, features = [
+  "router",
+], git = "https://github.com/DioxusLabs/components", version = "0.0.1" }
+dioxus-server = { default-features = false, features = [ "document", "router" ], version = "0.7.9" }
+mdbook-driver = "0.5"
+path-slash = "0.2"
+tempfile = "3"
+walkdir = "2.5"
+
+[profile.dev]
+codegen-units = 16
+debug = "limited"
+opt-level = 1
+split-debuginfo = "unpacked"
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+
+[workspace.lints.rust]
+unexpected_cfgs = { level = "deny" }
+
+[workspace.lints.clippy]
+dbg_macro = "deny"
+derive_partial_eq_without_eq = "warn"
+err_expect = "warn"
+incompatible_msrv = "deny"
+iter_on_single_items = "warn"
+needless_bool = "warn"
+redundant_clone = "warn"
+todo = "deny"
+type_complexity = "allow"
+uninlined_format_args = "allow"
+unused_trait_names = "warn"
+useless_conversion = "warn"
