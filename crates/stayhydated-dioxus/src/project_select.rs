@@ -133,6 +133,7 @@ pub fn ProjectSelect(
     selected: ProjectOption,
     projects: Vec<ProjectOption>,
     #[props(default = "Project".to_string())] label: String,
+    #[props(default = "Projects".to_string())] list_label: String,
 ) -> Element {
     let initial_selected = selected.clone();
     let mut selected_project = use_signal(move || Some(initial_selected));
@@ -171,7 +172,7 @@ pub fn ProjectSelect(
                     }
                 }
                 select::SelectList {
-                    aria_label: "Projects",
+                    aria_label: list_label,
                     for (index, project) in projects.iter().enumerate() {
                         {
                             let active = Some(project.clone()) == selected_project();

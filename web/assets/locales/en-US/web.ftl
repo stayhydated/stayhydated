@@ -10,4 +10,8 @@ home_message-ValidationSectionTitle = validation
 ## SiteMessage
 
 site_message-BrandKicker = Project index
+site_message-EsFluentDescription = Rust localization
+site_message-KorumaDescription = Rust validation
 site_message-LocaleLabel = Language
+site_message-ProjectListLabel = Projects
+site_message-ProjectSelectorLabel = Project selector

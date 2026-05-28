@@ -38,6 +38,10 @@ impl SiteLanguage {
 pub(crate) enum SiteMessage {
     BrandKicker,
     LocaleLabel,
+    ProjectListLabel,
+    ProjectSelectorLabel,
+    EsFluentDescription,
+    KorumaDescription,
 }
 
 #[derive(Clone, Copy, Debug, EsFluent)]
