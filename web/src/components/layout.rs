@@ -1,9 +1,10 @@
-use crate::site::i18n::{SiteChromeMessage, SiteLanguage};
+use crate::site::constants::SITE_NAME;
+use crate::site::i18n::{SiteLanguage, SiteMessage};
 use crate::site::routing::{PageKind, app_route};
 use dioxus::prelude::*;
 use dioxus::router::{navigator, try_router};
 use stayhydated_dioxus::{
-    LanguageSelect, ProjectOption, ProjectSelect, stayhydated_project_options,
+    LanguageSelect, ProjectSelect, StayhydatedProject, stayhydated_project_options,
 };
 
 #[component]
@@ -12,19 +13,16 @@ pub(crate) fn PageHeader(locale: SiteLanguage, current_page: PageKind) -> Elemen
         Ok(i18n) => i18n,
         Err(error) => return rsx! { header { class: "page-header", "failed: {error}" } },
     };
-    let brand_kicker = i18n.localize_message(&SiteChromeMessage::BrandKicker);
-    let site_name = i18n.localize_message(&SiteChromeMessage::SiteName);
+    let brand_kicker = i18n.localize_message(&SiteMessage::BrandKicker);
 
     rsx! {
         header { class: "page-header",
             ProjectSelect {
-                selected: ProjectOption::builder()
-                    .id("stayhydated")
-                    .mark("SH")
-                    .name(site_name)
-                    .description(brand_kicker)
-                    .href(crate::site::routing::page_href(locale, PageKind::Home))
-                    .build(),
+                selected: StayhydatedProject::Stayhydated.option_with(
+                    SITE_NAME,
+                    brand_kicker,
+                    crate::site::routing::page_href(locale, PageKind::Home),
+                ),
                 projects: stayhydated_project_options(),
                 label: "Project selector".to_string(),
             }
@@ -41,7 +39,7 @@ fn LocaleSwitcher(locale: SiteLanguage, current_page: PageKind) -> Element {
         Ok(i18n) => i18n,
         Err(error) => return rsx! { div { class: "locale-switcher-dropdown", "failed: {error}" } },
     };
-    let locale_label = i18n.localize_message(&SiteChromeMessage::LocaleLabel);
+    let locale_label = i18n.localize_message(&SiteMessage::LocaleLabel);
     let language_links = SiteLanguage::all()
         .map(|candidate| {
             let label = i18n.localize_message(&candidate);

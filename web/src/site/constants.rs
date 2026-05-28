@@ -1,4 +1,7 @@
+pub(crate) const SITE_NAME: &str = "stayhydated";
 pub(crate) const SITE_URL: &str = "https://stayhydated.github.io/";
+pub(crate) const HOME_PAGE_DESCRIPTION: &str =
+    "Project index for stayhydated Rust projects, including koruma and es-fluent.";
 
 pub(crate) const GITHUB_ORG_URL: &str = "https://github.com/stayhydated";
 pub(crate) const KORUMA_GITHUB_URL: &str = "https://github.com/stayhydated/koruma";

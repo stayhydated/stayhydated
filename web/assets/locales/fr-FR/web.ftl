@@ -1,12 +1,13 @@
+## HomeMessage
+
 home_message-EsFluentTitle = es-fluent
 home_message-KorumaTitle = koruma
 home_message-LocalizationSectionTitle = localisation
 home_message-ProjectSiteAction = Site
 home_message-ProjectSourceAction = Source
 home_message-ValidationSectionTitle = validation
-page_metadata_message-HomeDescription = Index des projets Rust stayhydated, dont koruma et es-fluent.
-page_metadata_message-HomeTitle = stayhydated
-site_chrome_message-BrandKicker = Index des projets
-site_chrome_message-LocaleLabel = Langue
-site_chrome_message-NavGithub = Organisation GitHub
-site_chrome_message-SiteName = stayhydated
+
+## SiteMessage
+
+site_message-BrandKicker = Index des projets
+site_message-LocaleLabel = Langue

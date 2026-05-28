@@ -13,6 +13,79 @@ pub struct ProjectOption {
     pub href: String,
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum StayhydatedProject {
+    Stayhydated,
+    Koruma,
+    EsFluent,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+struct ProjectMetadata {
+    id: &'static str,
+    mark: &'static str,
+    name: &'static str,
+    description: &'static str,
+    href: &'static str,
+}
+
+impl StayhydatedProject {
+    pub const ALL: [Self; 3] = [Self::Stayhydated, Self::Koruma, Self::EsFluent];
+
+    const fn metadata(self) -> ProjectMetadata {
+        match self {
+            Self::Stayhydated => ProjectMetadata {
+                id: "stayhydated",
+                mark: "SH",
+                name: "",
+                description: "",
+                href: "/",
+            },
+            Self::Koruma => ProjectMetadata {
+                id: "koruma",
+                mark: "K",
+                name: "koruma",
+                description: "Rust validation",
+                href: "/koruma/",
+            },
+            Self::EsFluent => ProjectMetadata {
+                id: "es-fluent",
+                mark: "EF",
+                name: "es-fluent",
+                description: "Rust localization",
+                href: "/es-fluent/",
+            },
+        }
+    }
+
+    pub fn option(self) -> ProjectOption {
+        let metadata = self.metadata();
+        self.option_with(metadata.name, metadata.description, metadata.href)
+    }
+
+    pub fn option_with(
+        self,
+        name: impl Into<String>,
+        description: impl Into<String>,
+        href: impl Into<String>,
+    ) -> ProjectOption {
+        let metadata = self.metadata();
+        ProjectOption::builder()
+            .id(metadata.id)
+            .mark(metadata.mark)
+            .name(name)
+            .description(description)
+            .href(href)
+            .build()
+    }
+}
+
+impl From<StayhydatedProject> for ProjectOption {
+    fn from(project: StayhydatedProject) -> Self {
+        project.option()
+    }
+}
+
 impl ProjectOption {
     fn text_value(&self) -> String {
         format!("{} {}", self.name, self.description)
@@ -28,29 +101,10 @@ impl PartialEq for ProjectOption {
 impl Eq for ProjectOption {}
 
 pub fn stayhydated_project_options() -> Vec<ProjectOption> {
-    vec![
-        ProjectOption::builder()
-            .id("stayhydated")
-            .mark("SH")
-            .name("stayhydated")
-            .description("Project index")
-            .href("/")
-            .build(),
-        ProjectOption::builder()
-            .id("koruma")
-            .mark("K")
-            .name("koruma")
-            .description("Rust validation")
-            .href("/koruma/")
-            .build(),
-        ProjectOption::builder()
-            .id("es-fluent")
-            .mark("EF")
-            .name("es-fluent")
-            .description("Rust localization")
-            .href("/es-fluent/")
-            .build(),
-    ]
+    StayhydatedProject::ALL
+        .into_iter()
+        .map(StayhydatedProject::option)
+        .collect()
 }
 
 #[component]

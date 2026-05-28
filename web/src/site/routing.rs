@@ -1,7 +1,7 @@
-use crate::site::i18n::{PageMetadataMessage, SiteLanguage};
+use crate::site::constants::{HOME_PAGE_DESCRIPTION, SITE_NAME};
+use crate::site::i18n::SiteLanguage;
 use dioxus::cli_config;
 use dioxus::prelude::*;
-use es_fluent_manager_dioxus::DioxusI18n;
 use std::fmt::{self, Display};
 use std::path::Path;
 use std::str::FromStr;
@@ -18,15 +18,15 @@ impl PageKind {
         }
     }
 
-    pub(crate) fn title(self, i18n: &DioxusI18n) -> String {
+    pub(crate) fn title(self) -> &'static str {
         match self {
-            Self::Home => i18n.localize_message(&PageMetadataMessage::HomeTitle),
+            Self::Home => SITE_NAME,
         }
     }
 
-    pub(crate) fn description(self, i18n: &DioxusI18n) -> String {
+    pub(crate) fn description(self) -> &'static str {
         match self {
-            Self::Home => i18n.localize_message(&PageMetadataMessage::HomeDescription),
+            Self::Home => HOME_PAGE_DESCRIPTION,
         }
     }
 }
@@ -223,8 +223,8 @@ fn route_element(route: SiteRoute) -> Element {
     match i18n_result {
         Ok(i18n) => {
             let _ = i18n.requested_language();
-            let title = route.page.title(&i18n);
-            let description = route.page.description(&i18n);
+            let title = route.page.title();
+            let description = route.page.description();
 
             rsx! {
                 Title { "{title}" }

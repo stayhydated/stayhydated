@@ -6,6 +6,7 @@ default:
 fmt:
     cargo sort-derives
     cargo fmt
+    cargo es-fluent fmt -P web --all
     taplo fmt
     rumdl fmt .
 
@@ -13,6 +14,7 @@ clippy:
     cargo clippy --workspace --all-features
 
 check:
+    cargo es-fluent status -P web --all
     cargo check --workspace --all-features
 
 test:

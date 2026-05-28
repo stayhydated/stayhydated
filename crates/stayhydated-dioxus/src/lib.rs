@@ -19,7 +19,7 @@ pub use layout::{
 pub use links::{BackLink, NavLink, RouteCardLink, RouteLink};
 pub use motion::{MotionReveal, use_reveal_style};
 pub use project_select::{
-    ProjectLockup, ProjectOption, ProjectSelect, stayhydated_project_options,
+    ProjectLockup, ProjectOption, ProjectSelect, StayhydatedProject, stayhydated_project_options,
 };
 pub use styles::SharedStyles;
 pub use tabs::{TabContent, TabList, TabTrigger, Tabs};

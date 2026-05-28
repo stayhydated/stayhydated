@@ -35,10 +35,8 @@ impl SiteLanguage {
 }
 
 #[derive(Clone, Copy, Debug, EsFluent)]
-pub(crate) enum SiteChromeMessage {
+pub(crate) enum SiteMessage {
     BrandKicker,
-    SiteName,
-    NavGithub,
     LocaleLabel,
 }
 
@@ -50,10 +48,4 @@ pub(crate) enum HomeMessage {
     ProjectSourceAction,
     KorumaTitle,
     EsFluentTitle,
-}
-
-#[derive(Clone, Copy, Debug, EsFluent)]
-pub(crate) enum PageMetadataMessage {
-    HomeTitle,
-    HomeDescription,
 }
