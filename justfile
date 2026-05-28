@@ -6,7 +6,8 @@ default:
 fmt:
     cargo sort-derives
     cargo fmt
-    cargo es-fluent fmt -P web --all
+    cargo es-fluent fmt --all
+    bun run fmt
     taplo fmt
     rumdl fmt .
 
@@ -20,8 +21,14 @@ check:
 test:
     cargo test --workspace --all-features --all-targets
 
+cov:
+    cargo llvm-cov --workspace --exclude xtask --exclude web --all-features --all-targets
+
+web-build:
+    cargo xtask build web
+
 web:
     dx serve --platform web --package web
 
-cov:
-    cargo llvm-cov --workspace --all-features --all-targets
+web-preview: web-build
+    cd web && bun run preview
