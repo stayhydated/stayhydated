@@ -1,5 +1,6 @@
 pub mod base;
 mod cards;
+pub mod i18n;
 mod language_select;
 mod layout;
 mod links;
@@ -19,8 +20,9 @@ pub use layout::{
 pub use links::{BackLink, NavLink, RouteCardLink, RouteLink};
 pub use motion::{MotionReveal, use_reveal_style};
 pub use project_select::{
-    ProjectLockup, ProjectLockupProps, ProjectOption, ProjectSelect, ProjectSelectProps,
-    StayhydatedProject, stayhydated_project_options,
+    ProjectLockup, ProjectLockupProps, ProjectOption, ProjectSelect, ProjectSelectMessage,
+    ProjectSelectProps, StayhydatedProject, localized_stayhydated_project_options,
+    stayhydated_project_options,
 };
 pub use styles::SharedStyles;
 pub use tabs::{TabContent, TabList, TabTrigger, Tabs};

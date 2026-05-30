@@ -1,13 +1,15 @@
-use crate::site::constants::{ES_FLUENT_SITE_URL, KORUMA_SITE_URL, SITE_NAME};
+use crate::site::constants::SITE_NAME;
 use crate::site::i18n::{SiteLanguage, SiteMessage};
 use crate::site::routing::{PageKind, app_route};
 use dioxus::prelude::*;
 use dioxus::router::{navigator, try_router};
-use stayhydated_dioxus::{LanguageSelect, ProjectOption, ProjectSelect, StayhydatedProject};
+use stayhydated_dioxus::{
+    LanguageSelect, ProjectOption, ProjectSelect, ProjectSelectMessage, StayhydatedProject,
+};
 
 #[component]
 pub(crate) fn PageHeader(locale: SiteLanguage, current_page: PageKind) -> Element {
-    let i18n = match es_fluent_manager_dioxus::use_i18n() {
+    let i18n = match es_fluent_manager_dioxus::use_asset_i18n() {
         Ok(i18n) => i18n,
         Err(error) => return rsx! { header { class: "page-header", "failed: {error}" } },
     };
@@ -17,13 +19,9 @@ pub(crate) fn PageHeader(locale: SiteLanguage, current_page: PageKind) -> Elemen
         brand_kicker.clone(),
         crate::site::routing::page_href(locale, PageKind::Home),
     );
-    let projects = localized_project_options(
-        selected_project.clone(),
-        i18n.localize_message(&SiteMessage::KorumaDescription),
-        i18n.localize_message(&SiteMessage::EsFluentDescription),
-    );
-    let project_selector_label = i18n.localize_message(&SiteMessage::ProjectSelectorLabel);
-    let project_list_label = i18n.localize_message(&SiteMessage::ProjectListLabel);
+    let projects = localized_project_options(selected_project.clone(), &i18n);
+    let project_selector_label = i18n.localize_message(&ProjectSelectMessage::ProjectSelectorLabel);
+    let project_list_label = i18n.localize_message(&ProjectSelectMessage::ProjectListLabel);
 
     rsx! {
         header { class: "page-header",
@@ -42,23 +40,18 @@ pub(crate) fn PageHeader(locale: SiteLanguage, current_page: PageKind) -> Elemen
 
 fn localized_project_options(
     current_site: ProjectOption,
-    koruma_description: String,
-    es_fluent_description: String,
+    i18n: &impl es_fluent::FluentLocalizer,
 ) -> Vec<ProjectOption> {
     vec![
         current_site,
-        StayhydatedProject::Koruma.option_with("koruma", koruma_description, KORUMA_SITE_URL),
-        StayhydatedProject::EsFluent.option_with(
-            "es-fluent",
-            es_fluent_description,
-            ES_FLUENT_SITE_URL,
-        ),
+        StayhydatedProject::Koruma.localized_option(i18n),
+        StayhydatedProject::EsFluent.localized_option(i18n),
     ]
 }
 
 #[component]
 fn LocaleSwitcher(locale: SiteLanguage, current_page: PageKind) -> Element {
-    let i18n = match es_fluent_manager_dioxus::use_i18n() {
+    let i18n = match es_fluent_manager_dioxus::use_asset_i18n() {
         Ok(i18n) => i18n,
         Err(error) => return rsx! { div { class: "locale-switcher-dropdown", "failed: {error}" } },
     };
@@ -92,13 +85,44 @@ fn LocaleSwitcher(locale: SiteLanguage, current_page: PageKind) -> Element {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::site::constants::{ES_FLUENT_SITE_URL, KORUMA_SITE_URL};
+    use es_fluent::{FluentLocalizer, FluentValue};
+    use std::collections::HashMap;
+
+    struct TestLocalizer;
+
+    impl FluentLocalizer for TestLocalizer {
+        fn localize<'a>(
+            &self,
+            id: &str,
+            args: Option<&HashMap<&str, FluentValue<'a>>>,
+        ) -> Option<String> {
+            self.localize_in_domain("web", id, args)
+        }
+
+        fn localize_in_domain<'a>(
+            &self,
+            domain: &str,
+            id: &str,
+            _args: Option<&HashMap<&str, FluentValue<'a>>>,
+        ) -> Option<String> {
+            match (domain, id) {
+                ("stayhydated-dioxus", "project_select_message-EsFluentDescription") => {
+                    Some("Rust 本地化".to_string())
+                },
+                ("stayhydated-dioxus", "project_select_message-KorumaDescription") => {
+                    Some("Rust 校验".to_string())
+                },
+                _ => None,
+            }
+        }
+    }
 
     #[test]
     fn project_options_use_localized_descriptions() {
         let projects = localized_project_options(
             StayhydatedProject::Stayhydated.option_with("stayhydated", "项目索引", "/zh/"),
-            "Rust 校验".to_string(),
-            "Rust 本地化".to_string(),
+            &TestLocalizer,
         );
 
         assert_eq!(projects[0].description, "项目索引");

@@ -10,8 +10,4 @@ home_message-ValidationSectionTitle = 校验
 ## SiteMessage
 
 site_message-BrandKicker = 项目索引
-site_message-EsFluentDescription = Rust 本地化
-site_message-KorumaDescription = Rust 校验
 site_message-LocaleLabel = 语言
-site_message-ProjectListLabel = 项目
-site_message-ProjectSelectorLabel = 项目选择器

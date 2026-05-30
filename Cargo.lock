@@ -1776,6 +1776,7 @@ dependencies = [
 name = "es-fluent-manager-dioxus"
 version = "0.7.0"
 dependencies = [
+ "dioxus",
  "dioxus-core",
  "dioxus-core-macro",
  "dioxus-hooks",
@@ -1784,9 +1785,14 @@ dependencies = [
  "es-fluent",
  "es-fluent-manager-core",
  "es-fluent-manager-macros",
+ "fluent-bundle",
+ "futures",
  "parking_lot",
+ "serde_json",
  "tracing",
  "unic-langid",
+ "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]
@@ -4551,6 +4557,9 @@ dependencies = [
  "dioxus",
  "dioxus-free-icons",
  "dioxus-primitives",
+ "es-fluent",
+ "es-fluent-build",
+ "es-fluent-manager-dioxus",
 ]
 
 [[package]]

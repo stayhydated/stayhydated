@@ -24,7 +24,7 @@
 
 .icon-nav-link svg,
 .project-card-action svg,
-.project-card-icon svg {
+.project-lockup svg {
   flex: 0 0 auto;
 }
 
@@ -79,24 +79,8 @@
   min-width: 0;
 }
 
-.project-card-icon {
-  display: grid;
-  place-items: center;
-  width: 2.6rem;
-  height: 2.6rem;
-  border: 1px solid rgba(0, 246, 255, 0.48);
-  border-radius: var(--radius);
-  color: var(--cyan);
-  background: #000;
-  box-shadow: var(--glow-cyan);
-}
-
-.directory-project-row h3 {
-  margin: 0;
-  color: #fff;
-  font-size: 1.45rem;
-  line-height: 1.1;
-  text-shadow: 0 0 18px rgba(0, 246, 255, 0.28);
+.directory-project-title .project-lockup.is-compact {
+  width: auto;
 }
 
 .project-card-actions {

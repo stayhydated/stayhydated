@@ -14,16 +14,15 @@ use es_fluent_manager_dioxus::ssr::{SsrI18n, SsrI18nRuntime};
 #[cfg(test)]
 #[component]
 fn SsrI18nProvider(i18n: SsrI18n, children: Element) -> Element {
-    i18n.provide_context()
-        .expect("SSR i18n context should be ready");
+    i18n.provide_context();
     children
 }
 
 #[cfg(test)]
 pub(crate) fn render_route_body(route: SiteRoute) -> Result<String> {
-    let runtime = SsrI18nRuntime::new();
+    let runtime = SsrI18nRuntime::new(crate::site::i18n::app_dioxus_i18n_asset_modules());
     let i18n = runtime
-        .request(route.locale.lang())
+        .request_blocking(route.locale.lang())
         .context("failed to initialize the Dioxus SSR localizer")?;
 
     Ok(i18n.render_element(rsx! {

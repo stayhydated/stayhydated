@@ -14,6 +14,11 @@ bon = { workspace = true }
 dioxus = { workspace = true }
 dioxus-free-icons = { workspace = true }
 dioxus-primitives = { workspace = true }
+es-fluent = { workspace = true }
+es-fluent-manager-dioxus = { workspace = true }
+
+[build-dependencies]
+es-fluent-build = { workspace = true }
 
 [lints]
 workspace = true

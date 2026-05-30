@@ -1,5 +1,6 @@
 use bon::Builder;
 use dioxus::{document, prelude::*};
+use es_fluent::{EsFluent, FluentLocalizer, FluentLocalizerExt as _};
 
 use crate::select;
 
@@ -13,15 +14,6 @@ pub struct ProjectOption {
     pub href: String,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
-struct ProjectOptionContent {
-    id: String,
-    mark: String,
-    name: String,
-    description: String,
-    href: String,
-}
-
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum StayhydatedProject {
     Stayhydated,
@@ -29,12 +21,20 @@ pub enum StayhydatedProject {
     EsFluent,
 }
 
+#[derive(Clone, Copy, Debug, EsFluent)]
+pub enum ProjectSelectMessage {
+    EsFluentDescription,
+    KorumaDescription,
+    ProjectListLabel,
+    ProjectSelectorLabel,
+    StayhydatedDescription,
+}
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 struct ProjectMetadata {
     id: &'static str,
     mark: &'static str,
     name: &'static str,
-    description: &'static str,
     href: &'static str,
 }
 
@@ -46,30 +46,48 @@ impl StayhydatedProject {
             Self::Stayhydated => ProjectMetadata {
                 id: "stayhydated",
                 mark: "SH",
-                name: "",
-                description: "",
+                name: "stayhydated",
                 href: "/",
             },
             Self::Koruma => ProjectMetadata {
                 id: "koruma",
                 mark: "K",
                 name: "koruma",
-                description: "Rust validation",
                 href: "/koruma/",
             },
             Self::EsFluent => ProjectMetadata {
                 id: "es-fluent",
                 mark: "EF",
                 name: "es-fluent",
-                description: "Rust localization",
                 href: "/es-fluent/",
             },
         }
     }
 
+    const fn description_message(self) -> Option<ProjectSelectMessage> {
+        match self {
+            Self::Stayhydated => Some(ProjectSelectMessage::StayhydatedDescription),
+            Self::Koruma => Some(ProjectSelectMessage::KorumaDescription),
+            Self::EsFluent => Some(ProjectSelectMessage::EsFluentDescription),
+        }
+    }
+
     pub fn option(self) -> ProjectOption {
         let metadata = self.metadata();
-        self.option_with(metadata.name, metadata.description, metadata.href)
+        self.option_with(metadata.name, "", metadata.href)
+    }
+
+    pub fn localized_option<L>(self, i18n: &L) -> ProjectOption
+    where
+        L: FluentLocalizer + ?Sized,
+    {
+        let metadata = self.metadata();
+        let description = self
+            .description_message()
+            .map(|message| i18n.localize_message(&message))
+            .unwrap_or_default();
+
+        self.option_with(metadata.name, description, metadata.href)
     }
 
     pub fn option_with(
@@ -96,16 +114,6 @@ impl From<StayhydatedProject> for ProjectOption {
 }
 
 impl ProjectOption {
-    fn content(&self) -> ProjectOptionContent {
-        ProjectOptionContent {
-            id: self.id.clone(),
-            mark: self.mark.clone(),
-            name: self.name.clone(),
-            description: self.description.clone(),
-            href: self.href.clone(),
-        }
-    }
-
     fn has_same_content(&self, other: &Self) -> bool {
         self.id == other.id
             && self.mark == other.mark
@@ -131,6 +139,16 @@ pub fn stayhydated_project_options() -> Vec<ProjectOption> {
     StayhydatedProject::ALL
         .into_iter()
         .map(StayhydatedProject::option)
+        .collect()
+}
+
+pub fn localized_stayhydated_project_options<L>(i18n: &L) -> Vec<ProjectOption>
+where
+    L: FluentLocalizer + ?Sized,
+{
+    StayhydatedProject::ALL
+        .into_iter()
+        .map(|project| project.localized_option(i18n))
         .collect()
 }
 
@@ -195,49 +213,53 @@ pub fn ProjectSelect(props: ProjectSelectProps) -> Element {
     let projects = props.projects;
     let label = props.label;
     let list_label = props.list_label;
-    let initial_selected = selected.clone();
-    let mut selected_project = use_signal(move || Some(initial_selected));
-    let selected_for_effect = selected.clone();
-    let selected_content = selected.content();
+    let initial_selected_id = selected.id.clone();
+    let mut selected_project_id = use_signal(move || Some(initial_selected_id));
+    let selected_id = selected.id.clone();
 
-    use_effect(use_reactive((&selected_content,), move |_| {
-        let next_selected = Some(selected_for_effect.clone());
-        let is_current = selected_project()
-            .as_ref()
-            .map(|current| current.has_same_content(&selected_for_effect))
-            .unwrap_or(false);
+    use_effect(use_reactive((&selected_id,), move |(next_selected_id,)| {
+        let next_selected = Some(next_selected_id);
 
-        if !is_current {
-            selected_project.set(next_selected);
+        if selected_project_id() != next_selected {
+            selected_project_id.set(next_selected);
         }
     }));
 
-    let trigger_project = selected_project()
-        .map(|current| {
+    let trigger_project = selected_project_id()
+        .as_ref()
+        .and_then(|current_id| {
             projects
                 .iter()
-                .find(|project| project.id == current.id)
+                .find(|project| project.id == *current_id)
                 .cloned()
-                .unwrap_or(current)
         })
         .unwrap_or_else(|| selected.clone());
-    let on_value_change = move |next_project: Option<ProjectOption>| {
-        let Some(next_project) = next_project else {
+    let projects_for_change = projects.clone();
+    let on_value_change = move |next_project_id: Option<String>| {
+        let Some(next_project_id) = next_project_id else {
             return;
         };
 
-        if Some(next_project.clone()) == selected_project() {
+        if Some(next_project_id.clone()) == selected_project_id() {
             return;
         }
 
-        selected_project.set(Some(next_project.clone()));
+        let Some(next_project) = projects_for_change
+            .iter()
+            .find(|project| project.id == next_project_id)
+            .cloned()
+        else {
+            return;
+        };
+
+        selected_project_id.set(Some(next_project_id));
         navigate_to_project(next_project.href);
     };
 
     rsx! {
         div { class: "project-switcher",
-            select::Select::<ProjectOption> {
-                value: Some(selected_project.into()),
+            select::Select::<String> {
+                value: Some(selected_project_id.into()),
                 on_value_change,
                 select::SelectTrigger {
                     aria_label: label,
@@ -249,16 +271,16 @@ pub fn ProjectSelect(props: ProjectSelectProps) -> Element {
                     aria_label: list_label,
                     for (index, project) in projects.iter().enumerate() {
                         {
-                            let active = Some(project.clone()) == selected_project();
+                            let active = Some(project.id.clone()) == selected_project_id();
                             let option_class = if active {
                                 "project-select-option is-active".to_string()
                             } else {
                                 "project-select-option".to_string()
                             };
                             rsx! {
-                                select::SelectOption::<ProjectOption> {
+                                select::SelectOption::<String> {
                                     index,
-                                    value: project.clone(),
+                                    value: project.id.clone(),
                                     text_value: Some(project.text_value()),
                                     class: Some(option_class),
                                     ProjectLockup {

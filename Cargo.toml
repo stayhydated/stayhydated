@@ -33,7 +33,6 @@ es-fluent-build = { path = "../es-fluent/crates/es-fluent-build", version = "0.1
 es-fluent-lang = { path = "../es-fluent/crates/es-fluent-lang", version = "0.16.0" }
 es-fluent-manager-dioxus = { default-features = false, features = [
   "client",
-  "debug-embed",
   "ssr",
 ], path = "../es-fluent/crates/es-fluent-manager-dioxus", version = "0.7.0" }
 mdbook-driver = "0.5"

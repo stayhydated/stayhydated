@@ -7,20 +7,14 @@ use crate::site::routing::PageKind;
 use dioxus::prelude::*;
 use dioxus_free_icons::{
     Icon,
-    icons::ld_icons::{LdBookOpen, LdGithub, LdLanguages, LdShieldCheck},
+    icons::ld_icons::{LdBookOpen, LdGitBranch},
 };
-use es_fluent_manager_dioxus::use_i18n;
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-enum ProjectKind {
-    Koruma,
-    EsFluent,
-}
+use es_fluent_manager_dioxus::use_asset_i18n;
+use stayhydated_dioxus::{ProjectLockup, ProjectOption, StayhydatedProject};
 
 #[derive(Clone, Debug, PartialEq)]
 struct ProjectSummary {
-    kind: ProjectKind,
-    title: String,
+    project: ProjectOption,
     site_href: &'static str,
     source_href: &'static str,
 }
@@ -29,7 +23,7 @@ struct ProjectSummary {
 pub(crate) fn HomePage(locale: SiteLanguage) -> Element {
     let validation_style = crate::components::use_reveal_style(0, 18.0);
     let localization_style = crate::components::use_reveal_style(80, 18.0);
-    let i18n = match use_i18n() {
+    let i18n = match use_asset_i18n() {
         Ok(i18n) => i18n,
         Err(error) => return rsx! { div { class: "page-shell", "failed: {error}" } },
     };
@@ -39,14 +33,20 @@ pub(crate) fn HomePage(locale: SiteLanguage) -> Element {
     let site_action = i18n.localize_message(&HomeMessage::ProjectSiteAction);
     let source_action = i18n.localize_message(&HomeMessage::ProjectSourceAction);
     let koruma_project = ProjectSummary {
-        kind: ProjectKind::Koruma,
-        title: i18n.localize_message(&HomeMessage::KorumaTitle),
+        project: StayhydatedProject::Koruma.option_with(
+            i18n.localize_message(&HomeMessage::KorumaTitle),
+            "",
+            KORUMA_SITE_URL,
+        ),
         site_href: KORUMA_SITE_URL,
         source_href: KORUMA_GITHUB_URL,
     };
     let es_fluent_project = ProjectSummary {
-        kind: ProjectKind::EsFluent,
-        title: i18n.localize_message(&HomeMessage::EsFluentTitle),
+        project: StayhydatedProject::EsFluent.option_with(
+            i18n.localize_message(&HomeMessage::EsFluentTitle),
+            "",
+            ES_FLUENT_SITE_URL,
+        ),
         site_href: ES_FLUENT_SITE_URL,
         source_href: ES_FLUENT_GITHUB_URL,
     };
@@ -103,21 +103,10 @@ fn ProjectCard(project: ProjectSummary, site_action: String, source_action: Stri
     rsx! {
         article { class: "directory-project-row",
             div { class: "directory-project-title",
-                span { class: "project-card-icon",
-                    match project.kind {
-                        ProjectKind::Koruma => rsx!(Icon {
-                            width: 24,
-                            height: 24,
-                            icon: LdShieldCheck,
-                        }),
-                        ProjectKind::EsFluent => rsx!(Icon {
-                            width: 24,
-                            height: 24,
-                            icon: LdLanguages,
-                        }),
-                    }
+                ProjectLockup {
+                    project: project.project,
+                    compact: true,
                 }
-                h3 { "{project.title}" }
             }
             div { class: "project-card-actions",
                 a { class: "project-card-action primary", href: project.site_href,
@@ -136,7 +125,7 @@ fn ProjectCard(project: ProjectSummary, site_action: String, source_action: Stri
                     Icon {
                         width: 17,
                         height: 17,
-                        icon: LdGithub,
+                        icon: LdGitBranch,
                     }
                     span { "{source_action}" }
                 }
